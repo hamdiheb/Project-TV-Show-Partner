@@ -1,5 +1,7 @@
 import { getEpisodes, getShows } from './app.js'
 
+let showArrFav = []
+
 async function setup() {
   const loading = document.getElementById('loading')
   const errorBox = document.getElementById('error')
@@ -20,11 +22,14 @@ async function setup() {
   })
 
   displayShows(shows)
+  const sort_fav_btn = document.querySelector('#sort_fav')
+  sort_fav_btn.addEventListener('click', () => {})
   // makePageForEpisodes(allEpisodes);
   // setupSearch(allEpisodes);
   // episodeSelector(allEpisodes);
 }
 
+function renderFav() {}
 function makePageForEpisodes(episodeList) {
   const component = displayMovies(episodeList, rootElem)
   for (const element of component) {
@@ -95,11 +100,11 @@ function displayMovies(Episodes) {
 function displayShows(Shows) {
   cleanDisplay()
   const showCard = Shows.map((show) => {
-    renderShowCard(show)
+    renderShowCard(show, showArrFav)
   })
 }
 
-function renderShowCard(show) {
+function renderShowCard(show, showArrFav) {
   const rootElem = document.getElementById('root')
   const { name, image, summary, averageRuntime, genres, rating, url } = show
 
@@ -114,8 +119,15 @@ function renderShowCard(show) {
   detailsElement.append(genresElement, runTimeElement, ratingElement)
 
   showFav.textContent = 'Add To favourite'
+
   showFav.addEventListener('click', () => {
-    localStorage.setItem(name, true)
+    const showFav = {
+      showTitle: name,
+      Fav: true,
+    }
+    showArrFav.push(showFav)
+    console.log(showArrFav)
+    localStorage.setItem('show', JSON.stringify(showArrFav))
   })
 
   genresElement.innerText = `Genres: ${genres.join(', ')}`
