@@ -23,13 +23,26 @@ async function setup() {
 
   displayShows(shows)
   const sort_fav_btn = document.querySelector('#sort_fav')
-  sort_fav_btn.addEventListener('click', () => {})
+  sort_fav_btn.addEventListener('click', () => renderFav(shows))
   // makePageForEpisodes(allEpisodes);
   // setupSearch(allEpisodes);
   // episodeSelector(allEpisodes);
 }
 
-function renderFav() {}
+function renderFav(shows) {
+  const favShows = JSON.parse(localStorage.getItem('show'))
+  const arrayfavshows = []
+  favShows.forEach((favShow) => {
+    shows.forEach((element) => {
+      if (element.name == favShow.showTitle) {
+        arrayfavshows.push(element)
+      }
+    })
+  })
+
+  displayShows(arrayfavshows)
+}
+
 function makePageForEpisodes(episodeList) {
   const component = displayMovies(episodeList, rootElem)
   for (const element of component) {
@@ -104,6 +117,30 @@ function displayShows(Shows) {
   })
 }
 
+function addFav(name, showArrFav) {
+  const showFav = {
+    showTitle: name,
+    Fav: true,
+  }
+  if (!localStorage.getItem('show')) {
+    localStorage.setItem('show', JSON.stringify([showFav]))
+  } else {
+    const savedfavShows = JSON.parse(localStorage.getItem('show'))
+    savedfavShows.push(showFav)
+    localStorage.setItem('show', JSON.stringify(savedfavShows))
+    // savedfavShows.push(showFav)
+    // localStorage.setItem('show', savedfavShows)
+  }
+  // localStorage.setItem('show', '')
+  // const savedfavShows = localStorage.getItem('show')
+  // if (savedfavShows.length != 0) {
+  //   savedfavShows.push(showFav)
+  //   localStorage.setItem('show', JSON.stringify(savedfavShows))
+  // } else {
+  //   showArrFav.push(showFav)
+  //   localStorage.setItem('show', JSON.stringify(showArrFav))
+  // }
+}
 function renderShowCard(show, showArrFav) {
   const rootElem = document.getElementById('root')
   const { name, image, summary, averageRuntime, genres, rating, url } = show
@@ -120,15 +157,7 @@ function renderShowCard(show, showArrFav) {
 
   showFav.textContent = 'Add To favourite'
 
-  showFav.addEventListener('click', () => {
-    const showFav = {
-      showTitle: name,
-      Fav: true,
-    }
-    showArrFav.push(showFav)
-    console.log(showArrFav)
-    localStorage.setItem('show', JSON.stringify(showArrFav))
-  })
+  showFav.addEventListener('click', () => addFav(name, showArrFav))
 
   genresElement.innerText = `Genres: ${genres.join(', ')}`
   runTimeElement.innerText = `Run Time: ${averageRuntime} minutes`
