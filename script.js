@@ -117,35 +117,32 @@ function displayShows(Shows) {
   })
 }
 
-function addFav(name, showArrFav) {
+function addFav(name, showArrFav, showFavbtn) {
+  if (showFavbtn.className == 'fav-btn') {
+    showFavbtn.className = 'fav-btn-active'
+  } else {
+    showFavbtn.className = 'fav-btn'
+  }
+
   const showFav = {
     showTitle: name,
     Fav: true,
   }
+
   if (!localStorage.getItem('show')) {
     localStorage.setItem('show', JSON.stringify([showFav]))
   } else {
     const savedfavShows = JSON.parse(localStorage.getItem('show'))
     savedfavShows.push(showFav)
     localStorage.setItem('show', JSON.stringify(savedfavShows))
-    // savedfavShows.push(showFav)
-    // localStorage.setItem('show', savedfavShows)
   }
-  // localStorage.setItem('show', '')
-  // const savedfavShows = localStorage.getItem('show')
-  // if (savedfavShows.length != 0) {
-  //   savedfavShows.push(showFav)
-  //   localStorage.setItem('show', JSON.stringify(savedfavShows))
-  // } else {
-  //   showArrFav.push(showFav)
-  //   localStorage.setItem('show', JSON.stringify(showArrFav))
-  // }
 }
 function renderShowCard(show, showArrFav) {
   const rootElem = document.getElementById('root')
   const { name, image, summary, averageRuntime, genres, rating, url } = show
 
   const showFav = document.createElement('button')
+  showFav.className = 'fav-btn'
   const showElement = document.createElement('article')
   const title = document.createElement('h3')
   const ratingElement = document.createElement('p')
@@ -157,7 +154,7 @@ function renderShowCard(show, showArrFav) {
 
   showFav.textContent = 'Add To favourite'
 
-  showFav.addEventListener('click', () => addFav(name, showArrFav))
+  showFav.addEventListener('click', () => addFav(name, showArrFav, showFav))
 
   genresElement.innerText = `Genres: ${genres.join(', ')}`
   runTimeElement.innerText = `Run Time: ${averageRuntime} minutes`
